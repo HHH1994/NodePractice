@@ -5,12 +5,13 @@ const  Koa = require("koa");
 const app = new Koa();
 var cors = require('koa-cors');
 var route = require('koa-route');
+var logger = require('koa-logger');
 var handle = require("./handler");
 var midware = require("./MiddleWare");
 // 解决跨域
-app.use(cors());
-app.use(midware.ErrorHandler);
-
+app.use(midware.ErrorHandler)
+    .use(logger())
+    .use(cors());
 
 // 路由
 app.use(route.get("/main",handle.main));
