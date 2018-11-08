@@ -3,20 +3,32 @@
  */
 const  Koa = require("koa");
 const app = new Koa();
-var cors = require('koa-cors');
-var route = require('koa-route');
-var logger = require('koa-logger');
-var handle = require("./handler");
-var midware = require("./MiddleWare");
+const cors = require('koa-cors');
+const Router = require('koa-router');
+const logger = require('koa-logger');
+const handle = require("./handler");
+const koabody = require("koa-body");
+const convert = require("koa-convert");//转换Generator函数为async函数
+const userControll = require("./controller/user");
+const midware = require("./MiddleWare");
+const router = new Router();
+
 // 解决跨域
 app.use(midware.ErrorHandler)
     .use(logger())
-    .use(cors());
+    .use(cors())
+    .use(koabody());
+
 
 // 路由
-app.use(route.get("/main",handle.main));
-app.use(route.get("/about",handle.about));
-app.use(route.get("/cookieDemo",handle.cookieDemo));
+router.get("/main",handle.main);
+router.get("/about",handle.about);
+router.get("/getUser",userControll.findUser);
+router.get("/getUserById",userControll.getUserById);
+router.post("/updateUser",userControll.updateUser);
+app.use(router.routes())
+    .use(router.allowedMethods());
+
 
 // 设置端口
 app.listen(3000);
