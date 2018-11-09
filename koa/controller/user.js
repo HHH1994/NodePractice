@@ -1,6 +1,11 @@
 /**
  * Created by HHH on 2018/11/8.
  */
+const Router = require('koa-router');
+const router = new Router({
+    prefix:"/user"
+});
+
 const userImpl = require("../implement/userImp");
 
 const  findUser = async ctx=>{
@@ -14,8 +19,9 @@ const updateUser = async ctx=>{
     await  userImpl.updateUser(ctx);
 };
 
-module.exports = {
-    findUser,
-    getUserById,
-    updateUser
-};
+
+/* 路由部分*/
+router.get("/getUser",findUser);
+router.get("/getUserById",getUserById);
+router.post("/updateUser",updateUser);
+module.exports = router;

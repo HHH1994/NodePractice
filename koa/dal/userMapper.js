@@ -6,7 +6,12 @@ const Mysql = require("../config/db");
 const userSchema = "../schema/user";
 const User = Mysql.import(userSchema);
 
-/* 根据id查找用户*/
+/**
+ *  根据id查找用户
+ * @param id
+ * @returns {Promise.<*>}
+ * @constructor
+ */
 async function GetUserById(id) {
     return await User.findOne({
         where: {
@@ -15,14 +20,18 @@ async function GetUserById(id) {
     })
 }
 
-/*根据条件查找用户*/
-async function findUser(condition) {
+/**
+ * 分页,根据条件查询用户
+ * @param condition
+ * @returns {Promise.<*>}
+ */
+async function findUserByPage(condition) {
     return await User.findAll({
         order:[
             ['age', 'DESC']
         ]
     });
-};
+}
 
 /* 新增用户*/
 async function AddUser(user) {
@@ -31,7 +40,7 @@ async function AddUser(user) {
         age:user.age,
         address:user.address
     })
-};
+}
 
 /* 更新用户*/
 async function UpdateUser(user) {
@@ -45,7 +54,7 @@ async function UpdateUser(user) {
                 id:user.id
             }
         });
-};
+}
 
 /* 删除用户*/
 async function DelUser(user) {
@@ -62,5 +71,5 @@ module.exports = {
     AddUser,
     UpdateUser,
     DelUser,
-    findUser
+    findUserByPage
 };

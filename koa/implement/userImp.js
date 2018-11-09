@@ -2,47 +2,46 @@
  * Created by HHH on 2018/11/8.
  */
 const userMapper = require("../dal/userMapper");
+const Result = require("../Response");
 
-var findUser = ctx=>{
-    userMapper.then(userList =>{
-        // var data = [];
-        // userList.forEach(item=>{
-        //    data.push(item.dataValues);
-        // });
-        ctx.status = 200;
+const findUser =  ctx=>{
+    let condition = ctx.request.query;
+    return userMapper.findUserByPage(condition).then(userList =>{
         ctx.response.body = userList;
     });
 };
 
-var getUserById = async ctx =>{
-    var id = ctx.request.query.id;
+/**
+ *  根据id查询用户
+ * @param ctx
+ * @returns {*}
+ */
+const getUserById =  ctx =>{
+    let id = ctx.request.query.id;
     if(id==""||id==undefined){
-        return  ctx.response.body={
-            code:2,
-            message:"请上传Id"
-        };
+        return  ctx.response.body= Result.ErrResult(0,"请上传id");
     }
-    await userMapper.GetUserById(id)
+    return userMapper.GetUserById(id)
         .then(res=>{
             if(res==null){
-                return  ctx.response.body={
-                    code:0,
-                    message:"查无结果"
-                };
+                return  ctx.response.body= Result.ErrResult(0,"查无结果");
             }
             ctx.response.body = res;
         });
 };
 
-var  updateUser = async  ctx =>{
-    var data =JSON.parse( ctx.request.body);
+/**
+ *  修改用户信息
+ * @param ctx
+ * @returns {*}
+ */
+const  updateUser =   ctx =>{
+    console.log(typeof ctx.request.body);
+    let data =JSON.parse( ctx.request.body);
     if(data.id==""||data.id==undefined){
-        return  ctx.response.body={
-            code:2,
-            message:"请上传Id"
-        };
+        return  ctx.response.body= Result.ErrResult(0,"请上传id");
     }
-    await userMapper.UpdateUser(data)
+    return userMapper.UpdateUser(data)
         .then(res=>{
             if(res[0]==1){
                 ctx.response.body = "修改成功";
@@ -55,6 +54,8 @@ var  updateUser = async  ctx =>{
             }
         })
 };
+
+
 
 // 解析上下文里node原生请求的POST参数
 function parsePostData( ctx ) {
