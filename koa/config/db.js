@@ -9,6 +9,7 @@ const config = {
     otherOption:{
         host:"localhost",//链接地址,
         dialect:"mysql",
+        operatorsAliases:false,
         define: {
             timestamps: false // 默认为 true
         }

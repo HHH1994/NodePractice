@@ -6,21 +6,28 @@ const articleImp = require("../implement/articleImp");
 
 
 
-const findArticle = async  ctx=>{
-    await articleImp.findArticle(ctx);
+const findArticleList = async  ctx=>{
+    await articleImp.findArticleList(ctx);
 };
 
 const addArticle = async ctx =>{
     await articleImp.addArticle(ctx);
 };
 
+const modifyArticle = async ctx =>{
+    await articleImp.modifyArticle(ctx);
+};
 
-
+const deleteArticle = async ctx=>{
+  await  articleImp.deleteArticle(ctx);
+};
 /* 路由部分*/
 const router = new Router({
     prefix:"/article/"
 });
-router.get("findArticle",findArticle);
+router.get("findArticle",findArticleList);
 router.post("addArticle",addArticle);
+router.post("modifyArticle",modifyArticle);
+router.post("deleteArticle",deleteArticle);
 
 module.exports = router;

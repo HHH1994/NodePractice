@@ -21,11 +21,27 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       defaultValue: '0'
     },
-    create_time: {
-      type: DataTypes.DATE,
+    userId: {
+      type: DataTypes.BIGINT,
+      allowNull: false
+    },
+    field1: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    field2: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    field3: {
+      type: DataTypes.STRING(255),
       allowNull: true
     },
     update_time: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    create_time: {
       type: DataTypes.DATE,
       allowNull: true
     }
