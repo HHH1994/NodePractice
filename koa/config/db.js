@@ -8,6 +8,7 @@ const config = {
     passward:"",
     otherOption:{
         host:"localhost",//链接地址,
+        dialect:"mysql",
         define: {
             timestamps: false // 默认为 true
         }
