@@ -4,7 +4,7 @@
 const  Koa = require("koa");
 const app = new Koa();
 const cors = require('koa-cors');
-const logger = require('koa-logger');
+const logMidWare = require('./logger');
 const handle = require("./handler");
 const koabody = require("koa-body");
 const convert = require("koa-convert");//转换Generator函数为async函数
@@ -17,7 +17,7 @@ const midware = require("./MiddleWare");
   4. 解析Post请求请求体中间件
 */
 app.use(midware.ErrorHandler)
-    .use(logger())
+    .use(logMidWare)
     .use(cors())
     .use(koabody());
 
@@ -29,7 +29,6 @@ const router3 = require("./controller/public");// 公共模块
 app.use(router1.routes())
     .use(router2.routes())
     .use(router3.routes());
-
 
 // 设置端口
 app.listen(3000);

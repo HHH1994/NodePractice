@@ -6,7 +6,7 @@ const articleImp = require("../implement/articleImp");
 
 
 
-const findArticle = async ctx=>{
+const findArticle = async  ctx=>{
     await articleImp.findArticle(ctx);
 };
 

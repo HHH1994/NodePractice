@@ -12,8 +12,8 @@ const Article = Mysql.import(userSchema);
  * @param condition
  * @returns {Promise.<*>}
  */
-async  function findArticle(condition){
-    return await Article.findOne({
+async function findArticle(condition){
+    return await  Article.findOne({
         where :{
             id:1
         }

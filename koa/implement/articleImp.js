@@ -7,6 +7,7 @@ const  Result = require("../Response");
 const findArticle = ctx =>{
     return articleMapper.findArticle()
         .then(res=>{
+            console.log(new Date().getTime());
             ctx.response.body = res;
         });
 };
