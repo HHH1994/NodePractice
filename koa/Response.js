@@ -2,10 +2,11 @@
  * Created by HHH on 2018/11/8.
  */
 
-const PageResult = ()=>{
+const PageResult = (data,total,isLast,isFirst,pageNo,pageSize)=>{
   return {
-      data:{},
+      data:data,
       pageNo:0,
+      pageSize:0,
       total:0,
       isLast:true,
       isFirst:true,

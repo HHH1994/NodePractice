@@ -21,12 +21,12 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       defaultValue: '0'
     },
-    userId: {
+    category_id: {
       type: DataTypes.BIGINT,
       allowNull: false
     },
-    field1: {
-      type: DataTypes.STRING(255),
+    fileld1: {
+      type: DataTypes.BIGINT,
       allowNull: true
     },
     field2: {

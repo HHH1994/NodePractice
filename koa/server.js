@@ -26,9 +26,11 @@ app.use(midware.ErrorHandler)
 const router1 = require("./controller/user");// 用户模块
 const router2 = require("./controller/article");// 文章模块
 const router3 = require("./controller/public");// 公共模块
+const router4 = require("./controller/category");// 类目模块
 app.use(router1.routes())
     .use(router2.routes())
-    .use(router3.routes());
+    .use(router3.routes())
+    .use(router4.routes());
 
 // 设置端口
 app.listen(3000);

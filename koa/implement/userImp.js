@@ -2,7 +2,9 @@
  * Created by HHH on 2018/11/8.
  */
 const userMapper = require("../dal/userMapper");
+const categoryMapper = require("../dal/categoryMapper");
 const Result = require("../Response");
+const Mysql = require("../config/db");
 
 const findUser =  ctx=>{
     let condition = ctx.request.query;
@@ -41,20 +43,48 @@ const  updateUser =   ctx =>{
     if(data.id==""||data.id==undefined){
         return  ctx.response.body= Result.ErrResult(0,"请上传id");
     }
-    return userMapper.UpdateUser(data)
-        .then(res=>{
-            if(res[0]==1){
-                ctx.response.body = "修改成功";
-            }
-            else {
-                ctx.response.body = {
-                    code:1,
-                    message:"无信息修改"
-                };
-            }
-        })
+    return Mysql.transaction(t=>{
+        return userMapper.UpdateUser(data,t)
+            .then(res=>{
+                if(res[0]==1){
+                    ctx.response.body = "修改成功";
+                }
+                else {
+                    ctx.response.body = {
+                        code:1,
+                        message:"无信息修改"
+                    };
+                }
+            });
+    }).then(res=>{
+        console.log("事务完成");
+    });
 };
 
+/**
+ *  获取用户信息
+ * @param ctx
+ * @returns {Promise.<TResult>}
+ */
+const getUserInfo = ctx=>{
+    // 查询文章总数
+    return  Mysql.transaction(t =>{
+       return categoryMapper.getAmountArticle(ctx.request.query.id)
+            .then( totalNum=>{
+                return userMapper.GetUserById(ctx.request.query.id)
+                    .then(res=>{
+                        res.dataValues.total_amount_article = totalNum;
+                        ctx.body = res;
+                    });
+            });
+    }).then(res=>{
+        console.log(res);
+    }).catch(err=>{
+        console.log(err);
+    });
+
+
+};
 
 
 // 解析上下文里node原生请求的POST参数
@@ -91,5 +121,6 @@ function parseQueryStr( queryStr ) {
 module.exports = {
     findUser,
     getUserById,
-    updateUser
+    updateUser,
+    getUserInfo
 };

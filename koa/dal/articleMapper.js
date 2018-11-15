@@ -17,12 +17,12 @@ const Op = Sequelize.Op;
  *           }
  * @returns {Promise.<*>}
  */
-async function findArticleList(condition){
+ function findArticleList(condition){
     const pageSize = parseInt(condition.pageSize),
            pageNo= parseInt(condition.pageNo),
            key = condition.key;
 
-    return await  Article.findAll({
+    return   Article.findAll({
         where :{
             delete_flag:0,
             [Op.or]:[
@@ -49,8 +49,8 @@ async function findArticleList(condition){
  * @param articleModel
  * @returns {Promise<Domain|Object>}
  */
-async function addArticle(articleModel){
-    return await  Article.create({
+ function addArticle(articleModel){
+    return   Article.create({
         title:articleModel.title,
         content:articleModel.content,
         delete_flag:0,
@@ -63,9 +63,9 @@ async function addArticle(articleModel){
  * @param articleMode
  * @returns {Promise.<*>}
  */
-async function modifyArticle(articleMode){
+ function modifyArticle(articleMode){
     console.log(Date.now());
-    return await  Article.update(
+    return   Article.update(
         {
         title:articleMode.title,
         content:articleMode.content,
@@ -85,8 +85,8 @@ async function modifyArticle(articleMode){
  * @param id 文章Id
  * @returns {Promise.<void>}
  */
-async  function updateStatus(status,id){
-    return await  Article.update(
+  function updateStatus(status,id){
+    return   Article.update(
         {
             delete_flag:status
         },

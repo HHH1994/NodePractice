@@ -4,7 +4,12 @@
 const sequelize = require("sequelize");
 const Mysql = require("../config/db");
 const userSchema = "../schema/user";
+const categorySchema = "../schema/category";
 const User = Mysql.import(userSchema);
+const Category = Mysql.import(categorySchema);
+
+User.hasOne(Category,{foreignKey: 'user_id', sourceKey: 'id'});//user表关联category表
+
 
 /**
  *  根据id查找用户
@@ -12,12 +17,12 @@ const User = Mysql.import(userSchema);
  * @returns {Promise.<*>}
  * @constructor
  */
-async function GetUserById(id) {
-    return await User.findOne({
+function GetUserById(id) {
+    return  User.findOne({
         where: {
             id:id
         }
-    })
+    });
 }
 
 /**
@@ -25,8 +30,8 @@ async function GetUserById(id) {
  * @param condition
  * @returns {Promise.<*>}
  */
-async function findUserByPage(condition) {
-    return await User.findAll({
+function FindUserByPage(condition) {
+    return  User.findAll({
         order:[
             ['age', 'DESC']
         ]
@@ -34,42 +39,44 @@ async function findUserByPage(condition) {
 }
 
 /* 新增用户*/
-async function AddUser(user) {
-    return await User.create({
+function AddUser(user) {
+    return  User.create({
         name:user.name,
         age:user.age,
-        address:user.address
+        address:user.address,
+        delete_flag:"0"
     })
 }
 
 /* 更新用户*/
-async function UpdateUser(user) {
-    return await User.update({
+function UpdateUser(user ,t) {
+    return  User.update({
             name:user.name,
             age:user.age,
             address:user.address,
+            delete_flag:user.delete_flag
         },
         {
             where:{
                 id:user.id
-            }
+            },
+            transaction:t
         });
 }
 
 /* 删除用户*/
-async function DelUser(user) {
-    return await User.destroy({
+ function DelUser(user) {
+    return  User.destroy({
         where:{
             id :user.id
         }
     });
 }
 
-
 module.exports = {
     GetUserById,
     AddUser,
     UpdateUser,
     DelUser,
-    findUserByPage
+    FindUserByPage
 };

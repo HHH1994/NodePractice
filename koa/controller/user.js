@@ -19,9 +19,13 @@ const updateUser = async ctx=>{
     await  userImpl.updateUser(ctx);
 };
 
+const getUserInfo = async ctx=>{
+    await userImpl.getUserInfo(ctx);
+};
 
 /* 路由部分*/
 router.get("/getUser",findUser);
 router.get("/getUserById",getUserById);
+router.get("/getUserInfo",getUserInfo);
 router.post("/updateUser",updateUser);
 module.exports = router;
