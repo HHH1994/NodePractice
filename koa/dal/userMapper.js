@@ -5,8 +5,11 @@ const sequelize = require("sequelize");
 const Mysql = require("../config/db");
 const userSchema = "../schema/user";
 const categorySchema = "../schema/category";
+const articleSchema = "../schema/article";
+
 const User = Mysql.import(userSchema);
 const Category = Mysql.import(categorySchema);
+const Article = Mysql.import(articleSchema);
 
 User.hasOne(Category,{foreignKey: 'user_id', sourceKey: 'id'});//user表关联category表
 
@@ -39,13 +42,15 @@ function FindUserByPage(condition) {
 }
 
 /* 新增用户*/
-function AddUser(user) {
+function AddUser(user,t) {
     return  User.create({
         name:user.name,
         age:user.age,
         address:user.address,
         delete_flag:"0"
-    })
+    },{
+        transaction:t
+    });
 }
 
 /* 更新用户*/
@@ -65,11 +70,12 @@ function UpdateUser(user ,t) {
 }
 
 /* 删除用户*/
- function DelUser(user) {
+ function DelUser(user,t) {
     return  User.destroy({
         where:{
             id :user.id
-        }
+        },
+        transaction:t
     });
 }
 

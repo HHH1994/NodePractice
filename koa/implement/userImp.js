@@ -6,12 +6,6 @@ const categoryMapper = require("../dal/categoryMapper");
 const Result = require("../Response");
 const Mysql = require("../config/db");
 
-const findUser =  ctx=>{
-    let condition = ctx.request.query;
-    return userMapper.findUserByPage(condition).then(userList =>{
-        ctx.response.body = userList;
-    });
-};
 
 /**
  *  根据id查询用户
@@ -26,7 +20,7 @@ const getUserById =  ctx =>{
     return userMapper.GetUserById(id)
         .then(res=>{
             if(res==null){
-                return  ctx.response.body= Result.ErrResult(0,"查无结果");
+                ctx.response.body= Result.ErrResult(0,"查无结果");
             }
             ctx.response.body = res;
         });
@@ -38,7 +32,6 @@ const getUserById =  ctx =>{
  * @returns {*}
  */
 const  updateUser =   ctx =>{
-    console.log(typeof ctx.request.body);
     let data =JSON.parse( ctx.request.body);
     if(data.id==""||data.id==undefined){
         return  ctx.response.body= Result.ErrResult(0,"请上传id");
@@ -56,8 +49,6 @@ const  updateUser =   ctx =>{
                     };
                 }
             });
-    }).then(res=>{
-        console.log("事务完成");
     });
 };
 
@@ -66,60 +57,33 @@ const  updateUser =   ctx =>{
  * @param ctx
  * @returns {Promise.<TResult>}
  */
-const getUserInfo = ctx=>{
+/*const getUserInfo =  ctx=>{
+ // 查询文章总数
+ return categoryMapper.getAmountArticle(ctx.request.query.id)
+ .then(  totalNum=>{
+ console.log("mapper1");
+ return userMapper.GetUserById(ctx.request.query.id)
+ .then(res=>{
+ console.log("mapper2");
+ res.dataValues.total_amount_article = totalNum;
+ ctx.body = res;
+ });
+ });
+ };*/
+const getUserInfo = async ctx=>{
     // 查询文章总数
-    return  Mysql.transaction(t =>{
-       return categoryMapper.getAmountArticle(ctx.request.query.id)
-            .then( totalNum=>{
-                return userMapper.GetUserById(ctx.request.query.id)
-                    .then(res=>{
-                        res.dataValues.total_amount_article = totalNum;
-                        ctx.body = res;
-                    });
-            });
-    }).then(res=>{
-        console.log(res);
-    }).catch(err=>{
-        console.log(err);
-    });
-
-
+    console.time("p2");
+    let userId = ctx.request.query.id;
+    let [totalNum,userInfo,categoryList] = await Promise.all([categoryMapper.getAmountArticle(userId),
+        userMapper.GetUserById(userId),
+        categoryMapper.findCategoriesList(userId)]);
+    console.timeEnd("p2");
+    userInfo.dataValues.total_amount_article = totalNum;
+    userInfo.dataValues.total_category = categoryList.length;
+    ctx.body = Result.SuccessResult(1,userInfo);
 };
 
-
-// 解析上下文里node原生请求的POST参数
-function parsePostData( ctx ) {
-    return new Promise((resolve, reject) => {
-        try {
-            let postdata = "";
-            ctx.req.addListener('data', (data) => {
-                postdata += data;
-                console.log(postdata);
-            });
-
-            ctx.req.addListener("end",function(){
-                let parseData = parseQueryStr( postdata );
-                resolve( parseData )
-            })
-        } catch ( err ) {
-            reject(err)
-        }
-    })
-}
-
-// 将POST请求参数字符串解析成JSON
-function parseQueryStr( queryStr ) {
-    let queryData = {};
-    let queryStrList = queryStr.split('&');
-    for ( let [ index, queryStr ] of queryStrList.entries() ) {
-        let itemList = queryStr.split('=');
-        queryData[ itemList[0] ] = decodeURIComponent(itemList[1]);
-    }
-    return queryData
-}
-
 module.exports = {
-    findUser,
     getUserById,
     updateUser,
     getUserInfo

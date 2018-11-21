@@ -20,6 +20,19 @@ const Category = Mysql.import(categorySchema);
 }
 
 /**
+ *  根据用户id查询类目列表
+ * @param userId
+ */
+function findCategoriesList(userId) {
+    return Category.findAll({
+       where:{
+           user_id : userId,
+           delete_flag:"0"
+       }
+    });
+}
+
+/**
  *  根据用户Id查找类目列表
  * @param userId
  * @returns {Promise.<Array.<Model>>}
@@ -49,5 +62,6 @@ function getAmountArticle(userId) {
 module.exports = {
     findAllCategories,
     findCategoriesByUserId,
-    getAmountArticle
+    getAmountArticle,
+    findCategoriesList
 };

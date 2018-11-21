@@ -16,13 +16,13 @@ const PageResult = (data,total,isLast,isFirst,pageNo,pageSize)=>{
 /**
  *  请求正确结果封装
  * @param res
- * @param msg
- * @returns {{msg: *, res: *}}
+ * @param data
+ * @returns {{data: *, res: *}}
  * @constructor
  */
-const SuccessResult = (res,msg)=>{
+const SuccessResult = (res,data)=>{
     return {
-        msg:msg,
+        data:data,
         res:res
     }
 };
