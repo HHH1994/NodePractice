@@ -4,16 +4,23 @@
 const  articleMapper = require("../dal/articleMapper");
 const  Result = require("../Response");
 
-const findArticleList = ctx =>{
+const findArticleList = async ctx =>{
     let condition = ctx.request.query;
-    console.log(condition);
+    if(condition.id==""||condition.id==undefined){
+        return ctx.body = Result.ErrResult(0,"请上传userid");
+    }
+    // 计算总数
+    let total = await articleMapper.findTotalAccount(condition);
+    let isFirst = condition.pageNo == "1" ? true:false,
+        isLast = total <= Number(condition.pageNo)*Number(condition.pageSize) ?true:false;
     return articleMapper.findArticleList(condition)
         .then(res=>{
             if(res==null){
                 ctx.response.body = Result.ErrResult(0,"暂无数据");
             }
             else {
-                ctx.response.body = res;
+                // 处理时间格式
+                ctx.response.body = Result.PageResult(res,total,isLast,isFirst,condition.pageNo,condition.pageSize);
             }
 
         });
@@ -68,9 +75,18 @@ const  deleteArticle = ctx =>{
         });
 };
 
+const findArticleListByUserId = async ctx =>{
+    let query = ctx.request.query;
+    let res = await articleMapper.findArticleListByUserId(query.id);
+    res.then(r=>{
+        console.log(r);
+        ctx.body = r;
+    });
+};
 module.exports ={
     findArticleList,
     addArticle,
     modifyArticle,
-    deleteArticle
+    deleteArticle,
+    findArticleListByUserId
 };

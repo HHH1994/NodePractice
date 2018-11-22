@@ -5,11 +5,11 @@
 const PageResult = (data,total,isLast,isFirst,pageNo,pageSize)=>{
   return {
       data:data,
-      pageNo:0,
-      pageSize:0,
-      total:0,
-      isLast:true,
-      isFirst:true,
+      pageNo:pageNo,
+      pageSize:pageSize,
+      total:total,
+      isLast:isLast,
+      isFirst:isFirst,
   }
 };
 

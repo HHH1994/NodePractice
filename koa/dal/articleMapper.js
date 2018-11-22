@@ -4,8 +4,11 @@
 const Sequelize = require("sequelize");
 const Mysql = require("../config/db");
 const userSchema = "../schema/article";
+const cateSchema = "../schema/category";
 const Article = Mysql.import(userSchema);
+const Category = Mysql.import(cateSchema);
 const Op = Sequelize.Op;
+Article.belongsTo(Category,{foreignKey:"category_id",targetKey:"id"});
 
 
 /**
@@ -17,13 +20,21 @@ const Op = Sequelize.Op;
  *           }
  * @returns {Promise.<*>}
  */
- function findArticleList(condition){
+function findArticleList(condition){
     const pageSize = parseInt(condition.pageSize),
-           pageNo= parseInt(condition.pageNo),
-           key = condition.key;
+        pageNo= parseInt(condition.pageNo),
+        id = condition.id,
+        key = condition.key;
 
-    return   Article.findAll({
-        where :{
+    return Article.findAll({
+        include:{
+            model:Category,
+            attributes:["name"],
+            where:{
+                user_id :id
+            }
+        },
+        where:{
             delete_flag:0,
             [Op.or]:[
                 {
@@ -37,10 +48,46 @@ const Op = Sequelize.Op;
                     },
                 }
             ]
-
         },
+        limit:pageSize,
         offset:(pageNo-1)*pageSize,
-        limit:pageSize
+    });
+}
+
+/**
+ *  计算文章总数
+ * @param condition
+ * @returns {Promise.<Number>}
+ */
+function findTotalAccount(condition){
+    const pageSize = parseInt(condition.pageSize),
+        pageNo= parseInt(condition.pageNo),
+        id = condition.id,
+        key = condition.key;
+
+    return Article.sum("article.id",{
+        include:{
+            model:Category,
+            attributes:["name"],
+            where:{
+                user_id :id
+            }
+        },
+        where:{
+            delete_flag:0,
+            [Op.or]:[
+                {
+                    title:{
+                        [Op.like]: '%'+key+'%',
+                    }
+                },
+                {
+                    content:{
+                        [Op.like]: '%'+key+'%',
+                    },
+                }
+            ]
+        }
     });
 }
 
@@ -49,7 +96,7 @@ const Op = Sequelize.Op;
  * @param articleModel
  * @returns {Promise<Domain|Object>}
  */
- function addArticle(articleModel){
+function addArticle(articleModel){
     return   Article.create({
         title:articleModel.title,
         content:articleModel.content,
@@ -63,13 +110,13 @@ const Op = Sequelize.Op;
  * @param articleMode
  * @returns {Promise.<*>}
  */
- function modifyArticle(articleMode){
+function modifyArticle(articleMode){
     console.log(Date.now());
     return   Article.update(
         {
-        title:articleMode.title,
-        content:articleMode.content,
-        update_time:new Date(Date.now()+8*60*60*1000)// 纠正时区,node服务器默认为格林尼治时间
+            title:articleMode.title,
+            content:articleMode.content,
+            update_time:new Date(Date.now()+8*60*60*1000)// 纠正时区,node服务器默认为格林尼治时间
         },
         {
             where:{
@@ -85,7 +132,7 @@ const Op = Sequelize.Op;
  * @param id 文章Id
  * @returns {Promise.<void>}
  */
-  function updateStatus(status,id){
+function updateStatus(status,id){
     return   Article.update(
         {
             delete_flag:status
@@ -103,5 +150,6 @@ module.exports = {
     findArticleList,
     addArticle,
     modifyArticle,
-    updateStatus
+    updateStatus,
+    findTotalAccount
 };
