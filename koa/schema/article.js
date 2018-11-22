@@ -25,7 +25,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BIGINT,
       allowNull: false
     },
-    fileld1: {
+    view_count: {
       type: DataTypes.BIGINT,
       allowNull: true
     },

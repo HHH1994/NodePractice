@@ -20,10 +20,14 @@ const getUserInfo = async ctx =>{
     await userImpl.getUserInfo(ctx);
 };
 
+const addViewCount = async ctx =>{
+    await userImpl.addViewCount(ctx);
+};
 
 /* 路由部分*/
 // 只有在route.get/post回调函数体内执行完前,ctx.body语句执行了,那么该次请求才算成功
 router.get("/getUserById",getUserById);
 router.get("/getUserInfo",getUserInfo);
 router.post("/updateUser",updateUser);
+router.post("/addViewCount",addViewCount);
 module.exports = router;

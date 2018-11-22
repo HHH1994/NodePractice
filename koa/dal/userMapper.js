@@ -79,10 +79,23 @@ function UpdateUser(user ,t) {
     });
 }
 
+/* 增加网站访问量*/
+function AddViewCount(id,count,t){
+    return User.update({
+        view_count:count+1
+    },{
+        where:{
+            id:id
+        },
+        transaction:t
+    });
+}
+
 module.exports = {
     GetUserById,
     AddUser,
     UpdateUser,
     DelUser,
-    FindUserByPage
+    FindUserByPage,
+    AddViewCount
 };

@@ -83,8 +83,30 @@ const getUserInfo = async ctx=>{
     ctx.body = Result.SuccessResult(1,userInfo);
 };
 
+
+const addViewCount = async ctx =>{
+    let quest = ctx.request.body;
+    if(quest.id==undefined||quest.id==""){
+        ctx.body = Result.ErrResult(0,"请上传用户ID");
+        return;
+    }
+    return Mysql.transaction(t=>{
+        return userMapper.AddViewCount(quest.id,quest.count,t)
+            .then(res=>{
+                if(res[0]){
+                    ctx.body = Result.SuccessResult(1,"访问量增加成功");
+                }
+                else {
+                    ctx.body = Result.ErrResult(0,"访问量增加失败");
+                }
+            });
+    });
+
+};
+
 module.exports = {
     getUserById,
     updateUser,
-    getUserInfo
+    getUserInfo,
+    addViewCount
 };
