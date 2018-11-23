@@ -8,6 +8,10 @@
  * @returns {*}
  */
 function getUploadFileExt(name) {
+    if(name.indexOf(".")==-1){
+        throw new Error("图片错误");
+        return;
+    }
     let ext = name.split('.');
     return ext[ext.length - 1];
 }

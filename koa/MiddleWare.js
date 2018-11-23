@@ -6,6 +6,7 @@ const ErrorHandler = async (ctx,next)=>{
         await  next();
     }
     catch (err){
+        console.log(`错:${err}`);
         ctx.response.status = err.statusCode || err.status || 500;
         ctx.response.body = {
             error:{
