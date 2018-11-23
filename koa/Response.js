@@ -23,7 +23,7 @@ const PageResult = (data,total,isLast,isFirst,pageNo,pageSize)=>{
 const SuccessResult = (res,data)=>{
     return {
         data:data,
-        res:res
+        result:res
     }
 };
 

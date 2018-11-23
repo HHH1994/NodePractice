@@ -96,12 +96,15 @@ function findTotalAccount(condition){
  * @param articleModel
  * @returns {Promise<Domain|Object>}
  */
-function addArticle(articleModel){
+function addArticle(articleModel,t){
     return   Article.create({
         title:articleModel.title,
         content:articleModel.content,
+        category_id:articleModel.category_id,
         delete_flag:0,
-        create_time:new Date()
+        create_time:new Date(Date.now()+8*60*60*1000)
+    },{
+        transaction:t
     });
 }
 

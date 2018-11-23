@@ -13,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     content: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.TEXT,
       allowNull: true
     },
     delete_flag: {
@@ -27,7 +27,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     view_count: {
       type: DataTypes.BIGINT,
-      allowNull: true
+      allowNull: false,
+      defaultValue: '0'
     },
     field2: {
       type: DataTypes.STRING(255),

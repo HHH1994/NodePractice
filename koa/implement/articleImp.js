@@ -3,6 +3,7 @@
  */
 const  articleMapper = require("../dal/articleMapper");
 const  Result = require("../Response");
+const Mysql = require("../config/db");
 
 const findArticleList = async ctx =>{
     let condition = ctx.request.query;
@@ -31,17 +32,26 @@ const findArticleList = async ctx =>{
  * @param ctx
  * @returns {Promise.<TResult>}
  */
-const addArticle  = ctx =>{
+const addArticle  = async ctx =>{
     let data = JSON.parse(ctx.request.body);
     if(data.title==""||data.title==undefined){
         return ctx.response.body = Result.ErrResult(0,"文章标题不能为空");
     }
-    return articleMapper.addArticle(data)
-        .then(res=>{
-            if(res.dataValues.id !=undefined){
-                ctx.response.body =  Result.SuccessResult(1,"新增成功");
-            }
-        });
+    else if(data.category_id==""||data.category_id==undefined){
+        return ctx.response.body = Result.ErrResult(0,"请选择文章分类");
+    }
+    return Mysql.transaction(t=>{
+        return articleMapper.addArticle(data,t)
+            .then(res=>{
+                if(res.dataValues.id !=undefined){
+                    ctx.response.body =  Result.SuccessResult(1,"新增文章成功");
+                }
+                else {
+                    ctx.response.body = Result.ErrResult(0,"增加文章失败");
+                }
+            });
+    });
+
 };
 
 /**
