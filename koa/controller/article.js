@@ -12,5 +12,6 @@ router.get("findArticle",articleImp.findArticleList);
 router.post("addArticle",articleImp.addArticle);
 router.post("modifyArticle",articleImp.modifyArticle);
 router.post("deleteArticle",articleImp.deleteArticle);
+router.get("findArticleById",articleImp.findArticleById);
 
 module.exports = router;

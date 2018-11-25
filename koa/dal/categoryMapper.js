@@ -59,9 +59,36 @@ function getAmountArticle(userId) {
     });
 }
 
+function findCategoryById(id) {
+    return Category.findOne({
+        where:{
+            id:id,
+            delete_flag:0
+        }
+    });
+}
+
+/**
+ *  类别文章总数+1
+ * @param id
+ * @param totalArticle
+ * @param transition
+ */
+function modifyArticleCount(id,totalArticle,transition){
+    return Category.update({
+        total_article:totalArticle
+    },{
+        where:{
+            id :id
+        },
+        transition:transition
+    });
+}
 module.exports = {
     findAllCategories,
     findCategoriesByUserId,
     getAmountArticle,
-    findCategoriesList
+    findCategoriesList,
+    modifyArticleCount,
+    findCategoryById
 };

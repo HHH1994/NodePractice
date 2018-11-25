@@ -2,6 +2,7 @@
  * Created by HHH on 2018/11/9.
  */
 const  articleMapper = require("../dal/articleMapper");
+const categoryMapper = require("../dal/categoryMapper");
 const  Result = require("../Response");
 const Mysql = require("../config/db");
 
@@ -42,7 +43,12 @@ const addArticle  = async ctx =>{
     }
     return Mysql.transaction(t=>{
         return articleMapper.addArticle(data,t)
-            .then(res=>{
+            .then(async res=>{
+                let curSum = await categoryMapper.findCategoryById(res.dataValues.category_id);
+                let res2 = await categoryMapper.modifyArticleCount(res.dataValues.category_id,(curSum.total_article+1),t);
+                if(!res[0]){
+                    return ctx.response.body =  Result.SuccessResult(1,"新增文章失败");
+                }
                 if(res.dataValues.id !=undefined){
                     ctx.response.body =  Result.SuccessResult(1,"新增文章成功");
                 }
@@ -93,10 +99,22 @@ const findArticleListByUserId = async ctx =>{
         ctx.body = r;
     });
 };
+
+const findArticleById = async ctx =>{
+    let id = ctx.request.query.id;
+    if(id==""||id==undefined){
+        return ctx.body = Result.ErrResult(0,"查询参数不能为空");
+    }
+    await articleMapper.findArticleById(id)
+        .then(res=>{
+            ctx.body=Result.SuccessResult(1,res);
+        });
+};
 module.exports ={
     findArticleList,
     addArticle,
     modifyArticle,
     deleteArticle,
-    findArticleListByUserId
+    findArticleListByUserId,
+    findArticleById
 };

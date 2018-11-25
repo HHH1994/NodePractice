@@ -148,11 +148,28 @@ function updateStatus(status,id){
     );
 }
 
+/**
+ *  根据文章id获取文章内容
+ * @param id
+ */
+function findArticleById(id) {
+    return Article.findOne({
+        include:{
+            model:Category,
+            attributes:["name"]
+        },
+        where:{
+            id:id,
+            delete_flag:0
+        }
+    });
+}
 
 module.exports = {
     findArticleList,
     addArticle,
     modifyArticle,
     updateStatus,
-    findTotalAccount
+    findTotalAccount,
+    findArticleById
 };
