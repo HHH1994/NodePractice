@@ -46,7 +46,7 @@ const addArticle  = async ctx =>{
             .then(async res=>{
                 let curSum = await categoryMapper.findCategoryById(res.dataValues.category_id);
                 let res2 = await categoryMapper.modifyArticleCount(res.dataValues.category_id,(curSum.total_article+1),t);
-                if(!res[0]){
+                if(!res2[0]){
                     return ctx.response.body =  Result.SuccessResult(1,"新增文章失败");
                 }
                 if(res.dataValues.id !=undefined){
