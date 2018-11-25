@@ -3,17 +3,28 @@
  */
 
 /**
- *  获取文件后缀名
+ *  根据文件路径获取文件后缀名
  * @param name
  * @returns {*}
  */
 function getUploadFileExt(name) {
-    if(name.indexOf(".")==-1){
-        throw new Error("图片错误");
-        return;
-    }
     let ext = name.split('.');
+    if(ext.length==1){
+        return undefined;
+    }
     return ext[ext.length - 1];
+}
+
+/**
+ *  根据文件类型获取后缀名
+ * @param type
+ */
+function getFileExtByType(type) {
+    if(type.indexOf("/")==-1){
+        return ;
+    }
+    let ext = type.split("/");
+    return ext[ext.length-1];
 }
 
 // 解析上下文里node原生请求的POST参数
@@ -48,5 +59,6 @@ function parseQueryStr( queryStr ) {
 }
 
 module.exports = {
-    getUploadFileExt
+    getUploadFileExt,
+    getFileExtByType
 };
