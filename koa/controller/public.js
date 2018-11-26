@@ -58,6 +58,7 @@ router.post("file", async ctx =>{
         // 文件上传处理
         form.parse(ctx.req,function (err,fields,files) {
             tempPath = form.openedFiles[0].path; // 获取文件的虚拟地址
+            console.log(tempPath);
             // 发生错误直接返回
             if(form.error!=null) {
                 fs.unlinkSync(tempPath);
@@ -89,7 +90,9 @@ router.post("file", async ctx =>{
             // 文件写入完成监听
             readStream.on('end',function(){
                 fs.unlinkSync(tempPath);// 异步删除虚拟文件
-                ctx.body = Result.SuccessResult(1,{path:curPath});
+                let filePath = curPath.split("/"),
+                    len = filePath.length;
+                ctx.body = Result.SuccessResult(1,{path:filePath[len-1]});
                 resolve("完成");
             });
         });

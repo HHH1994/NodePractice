@@ -59,6 +59,11 @@ function getAmountArticle(userId) {
     });
 }
 
+/**
+ *  根据类别id查找类目
+ * @param id
+ * @returns {Promise.<Model>}
+ */
 function findCategoryById(id) {
     return Category.findOne({
         where:{

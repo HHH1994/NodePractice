@@ -34,7 +34,7 @@ const findArticleList = async ctx =>{
  * @returns {Promise.<TResult>}
  */
 const addArticle  = async ctx =>{
-    let data = JSON.parse(ctx.request.body);
+    let data = ctx.request.body;
     if(data.title==""||data.title==undefined){
         return ctx.response.body = Result.ErrResult(0,"文章标题不能为空");
     }

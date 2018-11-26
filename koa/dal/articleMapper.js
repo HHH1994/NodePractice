@@ -21,34 +21,39 @@ Article.belongsTo(Category,{foreignKey:"category_id",targetKey:"id"});
  * @returns {Promise.<*>}
  */
 function findArticleList(condition){
+    console.log(condition);
     const pageSize = parseInt(condition.pageSize),
         pageNo= parseInt(condition.pageNo),
         id = condition.id,
-        key = condition.key;
-
+        key = condition.key,
+        category_id = condition.category_id;
+    let whereObj = {
+        delete_flag:0,
+        [Op.or]:[
+            {
+                title:{
+                    [Op.like]: '%'+key+'%',
+                }
+            },
+            {
+                content:{
+                    [Op.like]: '%'+key+'%',
+                },
+            }
+        ]
+    };
+    if(category_id!=null&&category_id!='undefined'&&category_id!=''){
+        whereObj.category_id = category_id;
+    }
     return Article.findAll({
         include:{
             model:Category,
-            attributes:["name"],
+            attributes:["id","name"],
             where:{
                 user_id :id
             }
         },
-        where:{
-            delete_flag:0,
-            [Op.or]:[
-                {
-                    title:{
-                        [Op.like]: '%'+key+'%',
-                    }
-                },
-                {
-                    content:{
-                        [Op.like]: '%'+key+'%',
-                    },
-                }
-            ]
-        },
+        where:whereObj,
         limit:pageSize,
         offset:(pageNo-1)*pageSize,
     });
