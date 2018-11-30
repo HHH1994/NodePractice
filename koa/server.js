@@ -21,7 +21,6 @@ app.use(midware.ErrorHandler)
     .use(cors())
     .use(koabody());
 
-
 // 路由
 const router1 = require("./controller/user");// 用户模块
 const router2 = require("./controller/article");// 文章模块

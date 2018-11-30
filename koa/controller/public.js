@@ -76,6 +76,7 @@ router.post("file", async ctx =>{
             }
             /* 方法一*/
             let readStream=fs.createReadStream(tempPath);
+            console.log("还没错");
             // 生成新的文件名
             let fileName = new Date().valueOf(),
                 fileExt = FileUtil.getUploadFileExt(tempPath);
@@ -97,6 +98,7 @@ router.post("file", async ctx =>{
             });
         });
     });
+
 });
 
 /**

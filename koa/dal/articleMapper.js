@@ -42,9 +42,10 @@ function findArticleList(condition){
             }
         ]
     };
-    if(category_id!=null&&category_id!='undefined'&&category_id!=''){
+    if(category_id!=null&&category_id!='undefined'&&category_id!=undefined&&category_id!=''){
         whereObj.category_id = category_id;
     }
+    console.log(whereObj);
     return Article.findAll({
         include:{
             model:Category,
@@ -170,11 +171,29 @@ function findArticleById(id) {
     });
 }
 
+/**
+ *  增加阅读量
+ * @param id
+ * @param count
+ * @param t
+ */
+function addViewCount(id,count,t){
+    return Article.update({
+        view_count:(count+1)
+    },{
+        where:{
+            id:id
+        },
+        transaction:t
+    });
+}
+
 module.exports = {
     findArticleList,
     addArticle,
     modifyArticle,
     updateStatus,
     findTotalAccount,
-    findArticleById
+    findArticleById,
+    addViewCount
 };

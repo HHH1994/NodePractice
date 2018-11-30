@@ -105,10 +105,18 @@ const findArticleById = async ctx =>{
     if(id==""||id==undefined){
         return ctx.body = Result.ErrResult(0,"查询参数不能为空");
     }
-    await articleMapper.findArticleById(id)
-        .then(res=>{
-            ctx.body=Result.SuccessResult(1,res);
-        });
+    return Mysql.transaction(async t=>{
+        return await articleMapper.findArticleById(id)
+            .then(async res=>{
+                let data = res.dataValues;
+                let res2 = await articleMapper.addViewCount(data.id,data.view_count,t);
+                if(res2[0]){
+                    res.dataValues.view_count += 1;
+                    ctx.body=Result.SuccessResult(1,res);
+                }
+
+            });
+    });
 };
 module.exports ={
     findArticleList,
