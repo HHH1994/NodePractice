@@ -163,4 +163,19 @@ router.post("files",koabody({
     }
 }),uploadFiles);
 
+router.get("getCode",async ctx=>{
+    let svg = require("svg-captcha");
+    let data = svg.create({
+        size:4,
+        noise:8,
+        background: '#cc9966',
+        color:true
+    });
+    console.log(data);
+    ctx.response.body = data;
+});
+
+
+
+
 module.exports = router;
